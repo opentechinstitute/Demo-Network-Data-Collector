@@ -8,7 +8,7 @@ Written by  https://stackoverflow.com/users/2936276/warriorpaw
 
 """
 
-from SocketServer import TCPServer, ThreadingMixIn, StreamRequestHandler
+from socketserver import TCPServer, ThreadingMixIn, StreamRequestHandler
 import ssl
 
 class HarnessServer(TCPServer):
