@@ -42,4 +42,4 @@ class testHandler(StreamRequestHandler):
 
 
 if __name__ == "__main__":
-    MySSL_ThreadingTCPServer(('127.0.0.1',5151),testHandler,"cert.pem","key.pem").serve_forever()
+    MySSL_ThreadingTCPServer(('127.0.0.1',5151),testHandler,"temp/cert.pem","temp/key.pem").serve_forever()
