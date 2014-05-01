@@ -26,8 +26,13 @@ class MySSL_ThreadingTCPServer(ThreadingMixIn, HarnessServer): pass
 
 class testHandler(StreamRequestHandler):
     def handle(self):
-        data = self.connection.recv(4096)
-        self.wfile.write(data)
+        try:
+            data = self.connection.recv(4096)
+            self.wfile.write(data)
+        except Exception as _ee:
+            print(_ee)
+            print(data)
+            print("==========")
 
 if __name__ == "__main__":
     MySSL_ThreadingTCPServer(('',5151),testHandler).serve_forever()
