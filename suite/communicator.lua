@@ -1,7 +1,8 @@
 #!/usr/bin/lua
 
+local nixio = require "nixio"
 local sys = require "luci.sys"
-local https = require "luci.httpclient"
+local http_client = require "luci.httpclient"
 local log = require "luci.commotion.debugger".log
 local json = require "luci.json"
 
@@ -13,7 +14,7 @@ local com = {}
 function com:send_results(ip, results, collector)
 
    -- TODO Replace this with a variable passed.
-   local server="https://"..ip.."/"..collector
+   local server="http://"..ip.."/"..collector
    local json_data = json.encode(results)
    if json_data then
 	  local packet = self:build_packet(json_data)
@@ -46,7 +47,7 @@ end
 
 function com:send_data(url, options)
    local stat, code, err
-   stat, code, err  = https.request_raw(bb_listener_url, options)
+   stat, code, err  = http_client.request_raw(url, options)
    if err then
 	  log("Could not send test data.")
 	  log("stat"..tostring(stat))
@@ -56,6 +57,11 @@ function com:send_data(url, options)
    else
 	  return true
    end
+end
+
+
+function com:connect(host, port, options)
+   http_client.request_to_source(uri, options)
 end
 
 

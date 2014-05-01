@@ -1,38 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-Simple ssl socket server from https://stackoverflow.com/a/19803457
+import socketserver 
 
-Written by  https://stackoverflow.com/users/2936276/warriorpaw
 
-"""
+class TestHandler(socketserver.StreamRequestHandler):
+    def handle(self):
+        data = self.connection.recv(4096)
+        print(data)
+        self.wfile.write(data)
+        self.wfile.write("HELLO!".encode())
 
-from socketserver import TCPServer, ThreadingMixIn, StreamRequestHandler
-import ssl
+class HarnessServer(socketserver.TCPServer):
 
-class HarnessServer(TCPServer):
-    def __init__(self,
-                 server_address,
-                 RequestHandlerClass,
-                 bind_and_activate=True):
-        TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
+    def __init__(self, server_address, handler_class):
+        print("initializing")
+        super().__init__(server_address, handler_class)
 
     def get_request(self):
         newsocket, fromaddr = self.socket.accept()
-        return fromaddr
+        print("got request")
+        return newsocket, fromaddr
 
-class MySSL_ThreadingTCPServer(ThreadingMixIn, HarnessServer): pass
-
-class testHandler(StreamRequestHandler):
-    def handle(self):
-        try:
-            data = self.connection.recv(4096)
-            self.wfile.write(data)
-        except Exception as _ee:
-            print(_ee)
-            print(data)
-            print("==========")
+class ThreadingTCPServer(socketserver.ThreadingMixIn, HarnessServer):
+    pass
 
 if __name__ == "__main__":
-    MySSL_ThreadingTCPServer(('',5151),testHandler).serve_forever()
+    ThreadingTCPServer(('', 5151), TestHandler).serve_forever()
