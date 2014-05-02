@@ -1,7 +1,6 @@
-
 A data collector for commotion wireless demonstration and test networks.
 
-** NOT to be used on production networks or networks with sensitive data.**
+### NOT to be used on production networks or networks with sensitive data.
 
 ## Architecture
 
