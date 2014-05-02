@@ -98,10 +98,12 @@ The harness setup scripts will do a series of things.
   * The harness will start up a simple socket server to receive test data on.
 
 ### Harness Network Identification
+
   * The harness will request the network neighbor information from the node it is directly connected to using the single purpose testing ssh key.
   * The harness will then create a test-schedule using this list of available nodes.
   
 ### Test initialization
+
   * The harness will log the test start time in the test info log
   * The harness will initialize the test using the single purpose testing ssh key.
   * The node will create a list of nodes on the network
@@ -109,23 +111,33 @@ The harness setup scripts will do a series of things.
     * Any tests that require another node to cooperate (iperf) will be started using a single purpose ssh key
     * All non-cooperative tests will be run against all nodes (and pre-configured internet sites and the test harness for some tests)
 	* All tests will be stored in both raw form and in somewhat parsed formats.
+
 ### test response
+
   * The node will open up a socket to the test harness server and dump the JSON data to the server
   * The harness will save the JSON data received
   * The harness will take key data points about that nodes tests and save them to the test info logfile
+
 ### test storage
+
   * The harness will log the test end time in the test info log
   * If the node did not return data the harness will log a failed test.
   * The harness will parse the JSON log and pull out some *key* information to populate into a summary section of the log-data.
+  
 ### iteration
+
   * The harness will continue this test process for every node in the test schedule
   * If any nodes failed to return data the test harness will attempt to retry those tests again at the end.
   * Once complete the test harness will one again request network neighbor information from its directly connected node and compare the returned list with its test harness. It will then run tests on any new nodes on the network.
+  
 ## test analysis
+
   * The harness will log the full testing end time in the test info log
   * The harness will gather cross-node information about the network
     * unique users on the network (MACs of clients with leases over time compared)
-## Roadmap / TODO 
+	
+## Roadmap / TODO
+
   * Simple harness socket server (Done)
   * Simple socket sender for node (in process)
   * harness setup scripts
