@@ -6,10 +6,12 @@ import socketserver
 
 class TestHandler(socketserver.StreamRequestHandler):
     def handle(self):
-        data = self.connection.recv(4096)
-        print(data)
-        self.wfile.write(data)
-        self.wfile.write("HELLO!".encode())
+        while True:
+            data = self.connection.recv(4096).strip()
+            if not data:
+                break
+            print(data)
+#            self.wfile.write(b"Connection Commenced\n")
 
 class HarnessServer(socketserver.TCPServer):
 
