@@ -1,5 +1,6 @@
 -- Usage: mesh_test.lua <server ip> <communication port> [test name]...
 -- e.g. mesh_test.lua 10.10.10.5 5151 ping iperf
+-- [test name] defaults to all
 
 local json = require "luci.json"
 local ip = require "luci.ip"
@@ -27,6 +28,7 @@ function get_test_data(requirements)
    return test_data
 end
 
+--TODO define the way tests will use this data, and what they need.
 function get_network_info()
    --Get JSON-info
    local raw_olsr_info = sys.exec("echo /all | nc 127.0.0.1 9090")
@@ -35,7 +37,9 @@ function get_network_info()
    
    --This function parses the network and creates a table out of it.
    --what we want to do it to actually take each section and write it to the "data" table above in a consistant way so that every test knows how to get it.
---[[ AVAILABLE DATA
+   
+--[[
+   AVAILABLE DATA
    mid	        table: 0x834750
    hna	        table: 0x830e58
    interfaces	table: 0x829198
@@ -50,15 +54,17 @@ function get_network_info()
    gateways	    table: 0x83f8b0
 ]]--
 
+   --an example of using the neighbors table to populate the nodes values
    data['nodes'] = json_table.neighbors
-   
+   --saving the full raw data.
+   data['olsr-info'] = json_table
 end
    
 -- args (table): table of command line arguments
-function main(args)
+function main(tests)
    local test
    prepare_logging()
-   for _,test in ipairs(args) do
+   for _,test in ipairs(tests) do
 	  local results = run_test(test)
 	  log_result(test, results)
    end
@@ -66,9 +72,8 @@ function main(args)
    save_to_server()
 end
 
-
+--Use the data.server & data.port variable to send the data using some service back to the server that originally called us.
 function save_to_server()
-   --here is where we use the data.server & data.port variable to send the data using some service back to the server that originally called us.
    local logs = get_logs()
    send_to_host(data.server, data.port, logs)
 end
@@ -102,19 +107,40 @@ end
 
 function get_logs()
    --get the log-file from wherever it is.
-
+   file = io.open("/tmp/test_suite", "r")
+   text = file:read("*a")
+   file.close()
+   return text
 end
 
+--prepare the file to write test results and the current date/time to.
 function prepare_logging()
-   --This is where we would prepare the file to write test results and the current date/time to.
+   --Erase any old test data
+   file = io.open("/tmp/test_suite", "w+")
+   file.write("{\n")
+   file.close()
 end
 
 function log_results(test, results)
    --This is where we would create the section for the specific test and log the results table that it passes us.
+   if type(results) ~= "string" then
+	  json.encode(results)
+   end
+   --Erase any old test data
+   file = io.open("/tmp/test_suite", "a+")
+   --add a comma after the previous item
+   file.write(",\n")
+   --key the results by the name of the test & write the results
+   file.write("\""..test.."\" : "..results)
+   file.close()
 end
 
 function end_logging()
    --This is where we would close out the logging for the tool. If we were using json it would simply close the curly brace prepare logging started.
+      --Erase any old test data
+   file = io.open("/tmp/test_suite", "a+")
+   file.write("}")
+   file.close()
 end
 
 function set_host(ip, port)
@@ -143,7 +169,9 @@ if arg[1] then
    main(arg)
 else
    --if no test specified, run them all
-   main("all")
+   --TODO define all tests here
+   all_tests = ['ping']
+   main(all_tests)
 end
 
 
