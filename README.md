@@ -147,3 +147,17 @@ The harness setup scripts will do a series of things.
   * node test runner (in process)
   * harness data analysis scripts
   * harness data visualization web-server (not planned, just a future wish.)
+
+
+## Resources
+
+  * [Socket Error 98 "Address already in use"](https://stackoverflow.com/questions/17780291/python-socket-error-errno-98-address-already-in-use)
+  * [Adding SSL Support to SocketServer](https://stackoverflow.com/questions/8582766/adding-ssl-support-to-socketserver)
+  * [Nixio socket module - for router client](https://neopallium.github.io/nixio/modules/nixio.Socket.html)
+  * [Nixio TLS Socket module for router client](https://neopallium.github.io/nixio/modules/nixio.TLSSocket.html)
+  * [An example of Nixio Socket in use](https://github.com/CapnBry/HeaterMeter/blob/f3a6beede2f9742ddfd8a0888a92c6cd2b742f4b/openwrt/package/linkmeter/luasrc/lmclient.lua)
+  * [Python Socket Server example - for harness server](http://cheesehead-techblog.blogspot.com/2013/12/python-socketserver-and-upstart-socket.html)
+  * [Introduction to python socket server module](http://pymotw.com/2/SocketServer/)
+  * [Python socketserver docs](https://docs.python.org/3/library/socketserver.html#module-socketserver)
+  * [An example implentation of a python socketserver](https://github.com/ctasims/socketserver/blob/master/server.py)
+  * [A really simple python socket server](http://kmkeen.com/socketserver/)
