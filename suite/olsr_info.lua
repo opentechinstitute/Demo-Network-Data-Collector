@@ -82,7 +82,7 @@ function oinfo:get_all()
    info["internet"] = false
    for _,x in ipairs(info.nodes) do
 	  if x == "0.0.0.0" then
-		 info["gateway"] = true
+		 info["internet"] = true
 	  end
    end
    --ETC
